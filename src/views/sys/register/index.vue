@@ -1,19 +1,36 @@
 <template>
-  <div class="page-login" style="display: flex;justify-content: center; align-items: center;margin-top: 50px;">
+  <div class="page-register" style="display: flex;justify-content: center; align-items: center;margin-top: 50px;">
     <div class="login-box">
  
     <form>
       <div class="user-box">
-        <input  name="" type="text" v-model="form.phone">
-        <label>手机号</label>
+        <input  name="" type="text" v-model="form.name">
+        <label>用户名</label>
       </div>
       <div class="user-box">
         <input name="" type="password" v-model="form.password">
         <label>密码</label>
       </div>
+      <div class="user-box">
+        <input  name="" type="text" v-model="form.age">
+        <label>年龄</label>
+      </div>
+      <div class="user-box">
+        <input name="" type="text" v-model="form.birthday">
+        <label>生日</label>
+      </div>
+      <div class="user-box">
+        <input  name="" type="text" v-model="form.sex">
+        <label>性别</label>
+      </div>
+      <div class="user-box">
+        <input name="" type="text" v-model="form.phone">
+        <label>手机号</label>
+      </div>
+      
       <center>
-      <a @click="login">
-              登录
+      <a  @click="register">
+              注册
           <span></span>
       </a>
     </center>
@@ -22,20 +39,16 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup >
 import request from '@/libs/request';
 import router from '@/router';
-import { useUserStore } from '@/stores/user';
 
-let user = useUserStore()
-
-const form={ phone:'18290983893',password:'123456' }
-const login=()=>{
-  request.post('/sp/user/login',form).then(res=>{
-    console.log(res)
-    user.setUserInfo(res);
-    router.push('/');
-    return;
+const form={  }
+const register=()=>{
+  request.post('/sp/user/register',form).then(res=>{
+    if(res === true){
+      router.push('/login');
+    }
   })
 }
 
@@ -43,6 +56,7 @@ const login=()=>{
 
 <style>
 .page-login{
+  background-color: #03f40f;
 }
 .login-box {
   position: absolute;

@@ -1,48 +1,69 @@
 <template>
-  <div class="page-login" style="display: flex;justify-content: center; align-items: center;margin-top: 50px;">
-    <div class="login-box">
- 
-    <form>
-      <div class="user-box">
-        <input  name="" type="text" v-model="form.phone">
-        <label>手机号</label>
-      </div>
-      <div class="user-box">
-        <input name="" type="password" v-model="form.password">
-        <label>密码</label>
-      </div>
-      <center>
-      <a @click="login">
-              登录
-          <span></span>
-      </a>
-    </center>
-    </form>
-    </div>
+  <div style=" display: flex;justify-content: center; align-items: center;margin-top: 30px;">
+    <h1 style="font-size: 40px;font-family: 'Courier New', Courier, monospace;
+    color: bisque;
+    ">您是我们尊贵的{{ form.title }}会员</h1>
+  </div>
+
+  <div class="page-register" style="display: flex;justify-content: center; align-items: center;margin-top: 30px;">
+    <img v-bind:src="'data:image/png;base64,' + base64EncodedString.value" />
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import request from '@/libs/request';
-import router from '@/router';
 import { useUserStore } from '@/stores/user';
+import { reactive } from "vue";
+import router from '@/router';
 
-let user = useUserStore()
+let u = useUserStore().userInfo
 
-const form={ phone:'18290983893',password:'123456' }
-const login=()=>{
-  request.post('/sp/user/login',form).then(res=>{
-    console.log(res)
-    user.setUserInfo(res);
-    router.push('/');
-    return;
-  })
+
+if(u.userId == null){
+  router.push('/login')
 }
 
-</script>
+let form = reactive({ 
+})
 
+ const base64EncodedString = reactive({ 
+    value:''
+ })
+
+
+const getQR =()=>{
+    request.get('sp/user/qr/'+u.userId).then(res=>{
+        base64EncodedString.value = res;
+    })
+}
+const info = () => {
+  request.get('/sp/user/' + u.userId).then(res => {
+    if (res.integral >= 10000) {
+        form.title  = '钻石'
+    } else if (res.integral >= 5000) {
+      form.title  = '铂金'
+    } else if (res.integral >= 2000) {
+      form.title  = '黄金'
+    } else if (res.integral >= 500) {
+      form.title  = '白银'
+    } else {
+      form.title  = '普通'
+    }
+  });
+};
+
+
+
+getQR()
+info()
+</script>
 <style>
+body{
+  background-image: url('https://img.ixintu.com/download/jpg/202010/fe85eee0cf1758ea722c8b1a3a1d5248_610_305.jpg!ys');
+  background-size: contain;
+}
 .page-login{
+  background-color: #03f40f;
 }
 .login-box {
   position: absolute;

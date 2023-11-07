@@ -6,3 +6,10 @@ export default function () {
     url: '/api',
   });
 }
+
+export function getNotices() {
+  return request<any>({
+    method: 'get',
+    url: '/system/notice/list',
+  });
+}
